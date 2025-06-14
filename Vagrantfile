@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "1024"
       vb.cpus   = "1"
       # Enable Promiscuous mode so the NIC can capture all network traffic
-      vb.customize ["modifyvm", :id, "--nicpromisc1", "allow-all"]
+      vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
     end
   end
 
@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
       vb.gui = false
       vb.memory = "1024"
       vb.cpus   = "1"
-      vb.customize ["modifyvm", :id, "--nicpromisc1", "allow-all"]
+      vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
     end
   end
 
@@ -57,12 +57,13 @@ Vagrant.configure("2") do |config|
                       use_dhcp_assigned_default_route: true,
                       mac: "AABBCCDD0000",
                       promiscuous_mode: "allow-all"
+                
 
     kali.vm.provider "virtualbox" do |vb|
       vb.gui = false
       vb.memory = "2048"
       vb.cpus   = "2"
-      vb.customize ["modifyvm", :id, "--nicpromisc1", "allow-all"]
+      vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
     end
 
     # Provisioning block to install necessary packages
