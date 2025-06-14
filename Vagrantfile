@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
     pc1.vm.network "public_network",
                       bridge: $bridge_interface,
                       use_dhcp_assigned_default_route: true,
+                      mac: "AABBCCDD0001",
                       promiscuous_mode: "allow-all"
 
     pc1.vm.provider "virtualbox" do |vb|
@@ -35,6 +36,7 @@ Vagrant.configure("2") do |config|
     pc2.vm.network "public_network",
                       bridge: $bridge_interface,
                       use_dhcp_assigned_default_route: true,
+                      mac: "AABBCCDD0002",
                       promiscuous_mode: "allow-all"
 
     pc2.vm.provider "virtualbox" do |vb|
@@ -53,6 +55,7 @@ Vagrant.configure("2") do |config|
     kali.vm.network "public_network",
                       bridge: $bridge_interface,
                       use_dhcp_assigned_default_route: true,
+                      mac: "AABBCCDD0000",
                       promiscuous_mode: "allow-all"
 
     kali.vm.provider "virtualbox" do |vb|
@@ -70,10 +73,11 @@ Vagrant.configure("2") do |config|
       # Optional: Perform a full system upgrade
       # sudo apt-get dist-upgrade -y --autoremove
     # SHELL
+    # sudo apt-get update -y
+    # sudo apt-get install -y isc-dhcp-client
+    # 
     # Try to fix before destroy
     # wget https://http.kali.org/kali/pool/main/k/kali-archive-keyring/kali-archive-keyring_2025.1_all.deb
     # sudo dpkg -i kali-archive-keyring_2025.1_all.deb
-    # sudo apt-get update -y
-    # sudo apt-get install -y isc-dhcp-client
   end
 end
