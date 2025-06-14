@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# Source environment variables from config.sh if it exists
+. $(dirname "$0")/config.sh
+
 PORT=9999
 
-echo "Server đang lắng nghe trên cổng $PORT..."
+echo "Server is listening on port $PORT..."
 echo "-------------------------------------"
 
-# Vòng lặp vô hạn để liên tục lắng nghe kết nối mới
+# Infinite loop to continuously listen for new connections
 while true; do
-  # nc sẽ lắng nghe, in ra dữ liệu nhận được, rồi kết thúc
-  # Vòng lặp while sẽ chạy lại nc để chờ kết nối tiếp theo
+  # nc will listen, print received data, then exit
+  # The while loop will restart nc to wait for the next connection
   nc -l -w 1 -p $PORT
 done

@@ -1,28 +1,30 @@
 #!/bin/bash
 
-# QUAN TRỌNG: Thay địa chỉ IP của PC2 vào đây
-SERVER_IP="192.168.195.159"
+# Source environment variables from config.sh if it exists
+. $(dirname "$0")/config.sh
+
+# IMPORTANT: Replace with the IP address of PC2
 PORT=9999
 COUNT=1
 
-echo "Bắt đầu gửi gói tin liên tục đến $SERVER_IP:$PORT..."
-echo "Nhấn Ctrl+C để dừng."
+echo "Start sending packets continuously to $DISPLAY_ADRESS:$PORT..."
+echo "Press Ctrl+C to stop."
 echo "---------------------------------------------"
 
-# Vòng lặp vô hạn để gửi gói tin
+# Infinite loop to send packets
 while true; do
-  # Tạo nội dung gói tin bao gồm số thứ tự và thời gian hiện tại
+  # Create packet content including sequence number and current time
   MESSAGE="Package no $COUNT | Time: $(date)"
 
-  # In ra màn hình để biết đã gửi
+  # Print to screen to indicate sent message
   echo "Sending: $MESSAGE"
 
-  # Gửi gói tin bằng nc
-  echo "$MESSAGE" | nc $SERVER_IP $PORT
+  # Send packet using nc
+  echo "$MESSAGE" | nc $DISPLAY_ADRESS $PORT
 
-  # Tăng biến đếm
+  # Increment counter
   COUNT=$((COUNT + 1))
 
-  # Chờ 1 giây trước khi gửi gói tin tiếp theo
+  # Wait 1 second before sending the next packet
   sleep 1
 done
