@@ -47,19 +47,19 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # ────────── Kali (Bridge Mode) ──────────
-  config.vm.define "kali" do |kali|
-    kali.vm.box = "kalilinux/rolling"
+  # ────────── pc0 (Bridge Mode) ──────────
+  config.vm.define "pc0" do |pc0|
+    pc0.vm.box = "ubuntu/focal64"
     
-    # Configure Bridge Mode, allowing Kali to get an IP directly from the physical router
-    kali.vm.network "public_network",
+    # Configure Bridge Mode, allowing pc0 to get an IP directly from the physical router
+    pc0.vm.network "public_network",
                       bridge: $bridge_interface,
                       use_dhcp_assigned_default_route: true,
                       mac: "AABBCCDD0000",
                       promiscuous_mode: "allow-all"
                 
 
-    kali.vm.provider "virtualbox" do |vb|
+    pc0.vm.provider "virtualbox" do |vb|
       vb.gui = false
       vb.memory = "2048"
       vb.cpus   = "2"
@@ -67,18 +67,19 @@ Vagrant.configure("2") do |config|
     end
 
     # Provisioning block to install necessary packages
-    # kali.vm.provision "shell", inline: <<-SHELL
-      # sudo apt-get update -y
-      # Install the DHCP client that Vagrant needs
-      # sudo apt-get install -y isc-dhcp-client
-      # Optional: Perform a full system upgrade
-      # sudo apt-get dist-upgrade -y --autoremove
-    # SHELL
+    pc0.vm.provision "shell", inline: <<-SHELL
+      sudo apt install zsh
+      sudo chsh -s `which zsh`
+      sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+      git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+      git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+    SHELL
     # sudo apt-get update -y
     # sudo apt-get install -y isc-dhcp-client
     # 
     # Try to fix before destroy
-    # wget https://http.kali.org/kali/pool/main/k/kali-archive-keyring/kali-archive-keyring_2025.1_all.deb
-    # sudo dpkg -i kali-archive-keyring_2025.1_all.deb
+    # wget https://http.pc0.org/pc0/pool/main/k/pc0-archive-keyring/pc0-archive-keyring_2025.1_all.deb
+    # sudo dpkg -i pc0-archive-keyring_2025.1_all.deb
   end
 end
