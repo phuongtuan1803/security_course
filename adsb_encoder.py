@@ -40,6 +40,7 @@ def _assemble(df:int, ca:int, icao:int, me_bits:str) -> str:
 
 # ─── Encoders ───────────────────────────────────────────────────────────────
 def encode_callsign(icao_hex:str, callsign:str)->str:
+    print(f"Encoding callsign: icao={icao_hex}, callsign={callsign}")
     icao=int(icao_hex,16)
     cs=callsign.strip().upper().ljust(8)
     six="".join(f"{_CHARSET.index(c):06b}" if c in _CHARSET else"000000" for c in cs)
@@ -57,26 +58,46 @@ def _cpr_NL(lat:float)->int:
 
 def encode_position(icao_hex:str,lat:float,lon:float,alt_ft:int,even:bool)->str:
     icao=int(icao_hex,16)
-    q=1;n_alt=int((alt_ft+1000)/25);alt=f"{n_alt:011b}";alt_bits=alt[:4]+str(q)+alt[4:]
-    d_lat=D_LAT_EVEN if even else D_LAT_ODD;fflag=0 if even else 1
+    q=1
+    n_alt=int((alt_ft+1000)/25)
+    alt=f"{n_alt:011b}"
+    alt_bits=alt[:4]+str(q)+alt[4:]
+
+    d_lat=D_LAT_EVEN if even else D_LAT_ODD
+    fflag=0 if even else 1
+
     lat_idx=math.floor(lat/d_lat)
     lat_cpr=int(round(((lat/d_lat)-lat_idx)*_2POW17))&0x1FFFF
+
     nl=_cpr_NL(lat)-(0 if even else 1)
-    d_lon=360.0/max(nl,1);lon_idx=math.floor(lon/d_lon)
+    d_lon=360.0/max(nl,1)
+    lon_idx=math.floor(lon/d_lon)
     lon_cpr=int(round(((lon/d_lon)-lon_idx)*_2POW17))&0x1FFFF
-    me=f"{11:05b}"+"0"+str(fflag)+alt_bits+"000"+f"{lat_cpr:017b}{lon_cpr:017b}"
+
+    # Fields per DO-260B: TC | SS=0,NIC_A=0 | altitude | time flag=0 | fflag | lat | lon
+    me=(
+        f"{11:05b}"   # type code 11 (airborne position, baro alt)
+        + "000"       # Surveillance status (00) + NIC Supplement-A (0)
+        + alt_bits    # 12-bit altitude with Q=1
+        + "0"         # Time flag: always 0 (no UTC sync)
+        + str(fflag)  # Odd(1)/Even(0) frame indicator
+        + f"{lat_cpr:017b}{lon_cpr:017b}"
+    )
     return _assemble(DF,CA,icao,me)
 
 def encode_velocity(icao_hex:str,gs_kn:float,track_deg:float,vr_fpm:int)->str:
+    print(f"Encoding velocity: icao={icao_hex}, gs_kn={gs_kn}, track_deg={track_deg}, vr_fpm={vr_fpm}")
     icao=int(icao_hex,16)
     v_e=gs_kn*math.sin(math.radians(track_deg));v_n=gs_kn*math.cos(math.radians(track_deg))
     ew_dir=0 if v_e>=0 else 1;ns_dir=0 if v_n>=0 else 1
     ew_vel=min(int(abs(v_e)+0.5),1023);ns_vel=min(int(abs(v_n)+0.5),1023)
+    print(f"  ew_dir={ew_dir}, ew_vel={ew_vel}, ns_dir={ns_dir}, ns_vel={ns_vel}")
     vr_sign=0 if vr_fpm>=0 else 1;vr_rate=min(int(abs(vr_fpm)/64+0.5),511)
     me=(f"{19:05b}"+"001"+"0"+"0"+"00"+
         str(ew_dir)+f"{ew_vel:010b}"+str(ns_dir)+f"{ns_vel:010b}"+
         "0"+str(vr_sign)+f"{vr_rate:09b}"+"000000")
     me=me.ljust(56,'0')
+    
     return _assemble(DF,CA,icao,me)
 
 # ─── Sender ─────────────────────────────────────────────────────────────────
@@ -106,7 +127,31 @@ def send_csv_lines_to_port(csv_path:str, rate_mps:float, host:str="127.0.0.1", p
                     print("Sending frame:", f)
                     s.sendall((f + "\n").encode())
                     time.sleep(delay)
+                    
+def load_csv_to_datafile(csv_path:str, out_path:str):
+    """Load rows from *csv_path* and write ADS-B frames to *out_path*."""
+    with open(csv_path, newline='') as f, open(out_path, 'w') as out:
+        rdr = csv.DictReader(f)
+        for row in rdr:
+            icao = row['icao']
+            cs = row.get('callsign', 'UNKNOWN')
+            lat = float(row['lat'])
+            lon = float(row['lon'])
+            alt = int(row.get('alt', 35000))
+            gs  = float(row.get('gs', 450))
+            trk = float(row.get('trk', 0))
+            vr  = int(row.get('vr', 0))
 
+            frames = [
+                encode_callsign(icao, cs),
+                encode_velocity(icao, gs, trk, vr),
+                encode_position(icao, lat, lon, alt, even=True),
+                encode_position(icao, lat, lon, alt, even=False),
+            ]
+
+            for f in frames:
+                out.write(f + "\n")
+                
 # ─── CLI ─────────────────────────────────────────────────────────────────────
 def main():
     p=argparse.ArgumentParser(description="Encode and send ADS-B DF17 frames")

