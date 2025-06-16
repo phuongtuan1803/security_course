@@ -40,7 +40,7 @@ def _assemble(df:int, ca:int, icao:int, me_bits:str) -> str:
 
 # ─── Encoders ───────────────────────────────────────────────────────────────
 def encode_callsign(icao_hex:str, callsign:str)->str:
-    print(f"Encoding callsign: icao={icao_hex}, callsign={callsign}")
+    # print(f"Encoding callsign: icao={icao_hex}, callsign={callsign}")
     icao=int(icao_hex,16)
     cs=callsign.strip().upper().ljust(8)
     six="".join(f"{_CHARSET.index(c):06b}" if c in _CHARSET else"000000" for c in cs)
@@ -86,12 +86,12 @@ def encode_position(icao_hex:str,lat:float,lon:float,alt_ft:int,even:bool)->str:
     return _assemble(DF,CA,icao,me)
 
 def encode_velocity(icao_hex:str,gs_kn:float,track_deg:float,vr_fpm:int)->str:
-    print(f"Encoding velocity: icao={icao_hex}, gs_kn={gs_kn}, track_deg={track_deg}, vr_fpm={vr_fpm}")
+    # print(f"Encoding velocity: icao={icao_hex}, gs_kn={gs_kn}, track_deg={track_deg}, vr_fpm={vr_fpm}")
     icao=int(icao_hex,16)
     v_e=gs_kn*math.sin(math.radians(track_deg));v_n=gs_kn*math.cos(math.radians(track_deg))
     ew_dir=0 if v_e>=0 else 1;ns_dir=0 if v_n>=0 else 1
     ew_vel=min(int(abs(v_e)+0.5),1023);ns_vel=min(int(abs(v_n)+0.5),1023)
-    print(f"  ew_dir={ew_dir}, ew_vel={ew_vel}, ns_dir={ns_dir}, ns_vel={ns_vel}")
+    # print(f"  ew_dir={ew_dir}, ew_vel={ew_vel}, ns_dir={ns_dir}, ns_vel={ns_vel}")
     vr_sign=0 if vr_fpm>=0 else 1;vr_rate=min(int(abs(vr_fpm)/64+0.5),511)
     me=(f"{19:05b}"+"001"+"0"+"0"+"00"+
         str(ew_dir)+f"{ew_vel:010b}"+str(ns_dir)+f"{ns_vel:010b}"+
@@ -181,3 +181,4 @@ def main():
 
 if __name__=="__main__":
     main()
+    # python adsb_encoder.py --send --csv aim_high_dataset.csv --rate 200
