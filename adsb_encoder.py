@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""adsb_encoder.py – revised
+"""adsb_encoder.py – revised with sender
 
-*Bug‑fix*: `encode_velocity()` now pads the ME field to **exactly 56 bits**
-(the spec reserves a few bits we weren’t filling, so some inputs produced a
-51‑bit string ➔ ValueError).  We simply `ljust(56,'0')` to append the 5 spare
-reserved bits, matching ICAO Doc 9871 table A‑2‑9.
+*Bug‑fix*: `encode_velocity()` now pads the ME field to **exactly 56 bits**.
+*Extension*: CSV loader + file writer + network sender with message rate (messages per second).
 """
 
-import argparse, csv, math
+import argparse, csv, math, time, socket
 from typing import List
 
 # ─── Constants ──────────────────────────────────────────────────────────────
@@ -19,7 +17,6 @@ D_LAT_ODD  = 360.0 / (4 * NZ - 1)
 _2POW17 = 1 << 17
 
 # ─── Bit helpers ────────────────────────────────────────────────────────────
-
 def _bits_to_hex(bits: str) -> str:
     return int(bits, 2).to_bytes(14, "big").hex().upper()
 
@@ -42,7 +39,6 @@ def _assemble(df:int, ca:int, icao:int, me_bits:str) -> str:
     return "*"+_bits_to_hex(aft88+f"{_crc24(aft88):024b}")+";"
 
 # ─── Encoders ───────────────────────────────────────────────────────────────
-
 def encode_callsign(icao_hex:str, callsign:str)->str:
     icao=int(icao_hex,16)
     cs=callsign.strip().upper().ljust(8)
@@ -50,7 +46,6 @@ def encode_callsign(icao_hex:str, callsign:str)->str:
     me=f"{1:05b}"+"000"+six
     return _assemble(DF,CA,icao,me)
 
-# CPR helper
 def _cpr_NL(lat:float)->int:
     lat=abs(lat)
     thresholds=[10.47047130,14.82817437,18.18626357,21.02939493,23.54504487,25.82924707,27.93898710,29.91135686,31.77209708,33.53993436,35.22899598,36.85025108,38.41241892,39.92256684,41.38651832,42.80914012,44.19454951,45.54626723,46.86733252,48.16039128,49.42776439,50.67150166,51.89342469,53.09516153,54.27817472,55.44378444,56.59318756,57.72747354,58.84763776,59.95459277,61.04917774,62.13216659,63.20427479,64.26616523,65.31845310,66.36171008,67.39646774,68.42322022,69.44242631,70.45451075,71.45986473,72.45884545,73.45177442,74.43893416,75.42056257,76.39684391,77.36789461,78.33374083,79.29428225,80.24923213,81.19801349,82.13956981,83.07199445,83.99173563,84.89166191,85.75541621,86.53536998,87]
@@ -81,27 +76,63 @@ def encode_velocity(icao_hex:str,gs_kn:float,track_deg:float,vr_fpm:int)->str:
     me=(f"{19:05b}"+"001"+"0"+"0"+"00"+
         str(ew_dir)+f"{ew_vel:010b}"+str(ns_dir)+f"{ns_vel:010b}"+
         "0"+str(vr_sign)+f"{vr_rate:09b}"+"000000")
-    me=me.ljust(56,'0')  # pad reserved bits ➔ 56 bits total
+    me=me.ljust(56,'0')
     return _assemble(DF,CA,icao,me)
 
-# ─── CLI ─────────────────────────────────────────────────────────────────────
+# ─── Sender ─────────────────────────────────────────────────────────────────
+def send_csv_lines_to_port(csv_path:str, rate_mps:float, host:str="127.0.0.1", port:int=30001):
+    with open(csv_path, newline='') as f:
+        rdr = csv.DictReader(f)
+        even_flag = True
+        delay = 1.0 / rate_mps if rate_mps > 0 else 1.0
+        for row in rdr:
+            icao = row['icao']
+            cs = row.get('callsign', 'UNKNOWN')
+            lat = float(row['lat'])
+            lon = float(row['lon'])
+            alt = int(row.get('alt', 35000))
+            gs  = float(row.get('gs', 450))
+            trk = float(row.get('trk', 0))
+            vr  = int(row.get('vr', 0))
+            frames = [
+                encode_callsign(icao, cs),
+                encode_velocity(icao, gs, trk, vr),
+                encode_position(icao, lat, lon, alt, even=True),
+                encode_position(icao, lat, lon, alt, even=False)
+            ]
+            print("Sending frames for icao:", icao)
+            with socket.create_connection((host, port)) as s:
+                for f in frames:
+                    print("Sending frame:", f)
+                    s.sendall((f + "\n").encode())
+                    time.sleep(delay)
 
+# ─── CLI ─────────────────────────────────────────────────────────────────────
 def main():
-    p=argparse.ArgumentParser(description="Encode flight data to DF17 frames")
+    p=argparse.ArgumentParser(description="Encode and send ADS-B DF17 frames")
     p.add_argument("--icao");p.add_argument("--callsign")
     p.add_argument("--lat",type=float);p.add_argument("--lon",type=float)
     p.add_argument("--alt",type=int);p.add_argument("--gs",type=float)
     p.add_argument("--trk",type=float);p.add_argument("--vr",type=int,default=0)
+    p.add_argument("--csv");p.add_argument("--out")
+    p.add_argument("--send", action="store_true")
+    p.add_argument("--rate", type=float, default=1.0, help="Message rate in messages per second")
     args=p.parse_args()
-    if not all([args.icao,args.callsign,args.lat,args.lon,args.alt,args.gs,args.trk]):
-        p.error("Missing parameters")
-    frames=[
-        encode_callsign(args.icao,args.callsign),
-        encode_velocity(args.icao,args.gs,args.trk,args.vr),
-        encode_position(args.icao,args.lat,args.lon,args.alt,True),
-        encode_position(args.icao,args.lat,args.lon,args.alt,False)
-    ]
-    for f in frames:print(f)
+
+    if args.send and args.csv:
+        send_csv_lines_to_port(args.csv, args.rate)
+    elif args.csv:
+        load_csv_to_datafile(args.csv, args.out or "out.data")
+    else:
+        if not all([args.icao,args.callsign,args.lat,args.lon,args.alt,args.gs,args.trk]):
+            p.error("Missing parameters")
+        frames=[
+            encode_callsign(args.icao,args.callsign),
+            encode_velocity(args.icao,args.gs,args.trk,args.vr),
+            encode_position(args.icao,args.lat,args.lon,args.alt,True),
+            encode_position(args.icao,args.lat,args.lon,args.alt,False)
+        ]
+        for f in frames:print(f)
 
 if __name__=="__main__":
     main()
