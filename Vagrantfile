@@ -68,18 +68,29 @@ Vagrant.configure("2") do |config|
 
     # Provisioning block to install necessary packages
     kali.vm.provision "shell", inline: <<-SHELL
-      sudo apt install zsh
-      sudo chsh -s `which zsh`
-      sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
-      git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-      git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+      wget https://http.kali.org/kali/pool/main/k/kali-archive-keyring/kali-archive-keyring_2025.1_all.deb
+      sudo dpkg -i kali-archive-keyring_2025.1_all.deb
+      sudo apt update -y
+      sudo apt install isc-dhcp-client
+
+      # for arp spoofing
+      sudo apt install bettercap -y
+      sudo apt install libnfnetlink-dev libnetfilter-queue-dev
+      sudo apt install libmnl-dev libpcap-dev -y
+      sudo python3 -m pip install --break-system-packages netfilterqueue
+
+      # for flight data
+      python -m pip install pyModeS --break-system-packages
+      python3 -m pip install --upgrade ads-b --break-system-packages
+      sudo apt install -y librtlsdr-dev pkg-config build-essential libusb-1.0-0-dev
+
+
 
     SHELL
     # sudo apt-get update -y
     # sudo apt-get install -y isc-dhcp-client
     # 
     # Try to fix before destroy
-    # wget https://http.kali.org/kali/pool/main/k/kali-archive-keyring/kali-archive-keyring_2025.1_all.deb
-    # sudo dpkg -i kali-archive-keyring_2025.1_all.deb
+
   end
 end
