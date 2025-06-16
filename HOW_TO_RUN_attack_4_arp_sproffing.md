@@ -18,8 +18,7 @@ Edit `config.sh` to set the correct IP addresses and network interface. Example:
 ## 2. Run `attack_4_arp_sproffing.sh`
 Make the script executable and run it:
 ```bash
-chmod +x attack_4_arp_sproffing.sh
-./attack_4_arp_sproffing.sh
+sudo sh attack_4_arp_sproffing.sh 
 ```
 
 ## 3. Run `adsb_encoder.py`
