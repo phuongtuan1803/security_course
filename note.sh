@@ -12,3 +12,4 @@ sudo netplan apply
 
 sudo ip addr add 172.20.3.89/24 dev eth1
 sudo ip addr del 172.20.3.89/24 dev eth1
+sudo systemctl restart NetworkManager
