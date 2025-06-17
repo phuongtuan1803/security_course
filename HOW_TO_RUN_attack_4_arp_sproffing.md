@@ -12,6 +12,17 @@ This guide explains how to run the following scripts:
 - You may need `arpspoof` and other network tools.
 - Make sure `config.sh` is configured with the correct IP addresses and interface.
 
+## 0. Install `dump1090`
+Make the script executable and run it:
+```bash
+cd
+sudo apt update
+sudo apt install -y librtlsdr-dev pkg-config build-essential libusb-1.0-0-dev
+git clone git@github.com:antirez/dump1090.git
+cd dump1090
+make
+```
+
 ## 1. Configure `config.sh`
 Edit `config.sh` to set the correct IP addresses and network interface. Example:
 

