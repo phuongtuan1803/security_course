@@ -4,6 +4,8 @@ import pandas as pd
 from PIL import Image, ImageOps
 import math
 import sys
+import random
+import argparse
 
 # 1. Read image + convert to black-and-white binary
 if len(sys.argv) < 2:
@@ -23,7 +25,7 @@ h, w = arr.shape
 
 # 3. Function to convert pixel → GPS coordinates
 lat0, lon0 = 40.4406, -79.9959
-def pixel_to_gps(px, py, *, meters_per_pixel=1000):
+def pixel_to_gps(px, py, *, meters_per_pixel=2000):
     dx = (px - w / 2) * meters_per_pixel          # +east
     dy = (py - h / 2) * meters_per_pixel          # +south
     lat = lat0 - dy / 111_320                     # +north
@@ -47,6 +49,40 @@ df = pd.DataFrame({
     # "pixel_x": xs,
     # "pixel_y": ys
 })
+
+# Create a new DataFrame with perturbed values
+rows = []
+parser = argparse.ArgumentParser()
+parser.add_argument("--noise", type=int, default=5, help="Number of times to repeat each data point with noise")
+args = parser.parse_args(sys.argv[2:])
+
+noise = args.noise  # Number of times to repeat each data point with noise
+sample_size = 50  # Number of data points to sample
+
+if len(df) < sample_size:
+    sample_indices = df.index
+else:
+    sample_indices = random.sample(list(df.index), sample_size)
+
+for _ in range(noise):
+    for idx in sample_indices:
+        row = df.loc[idx]
+        lat = row['lat'] + random.uniform(-0.9, 0.9)   # ~100km in degrees latitude
+        lon = row['lon'] + random.uniform(-1.2, 1.2)   # ~100km in degrees longitude at mid-lat
+        new_row = {
+            "icao": f"A{str(idx+1).zfill(5)}",
+            "callsign": "FAKE",
+            "lat": lat,
+            "lon": lon,
+            "alt": random.randint(20000, 41000),
+            "gs": random.uniform(100, 600),
+            "trk": random.uniform(0, 359),
+            "vr": random.randint(-3000, 3000)
+        }
+        rows.append(new_row)
+
+df_fake = pd.DataFrame(rows)
+df = pd.concat([df_fake, df], ignore_index=True)
 
 csv_path = "aim_high_dataset.csv"
 df.to_csv(csv_path, index=False)
