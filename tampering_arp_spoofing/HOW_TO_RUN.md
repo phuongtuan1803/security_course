@@ -1,8 +1,8 @@
 # How to Run Security Course Scripts
 
 This guide explains how to run the following scripts:
-- `attack_4_arp_sproffing.sh`
-- `attack_4_arp_sproffing.py`
+- `tampering_arp_spoofing.sh`
+- `tampering_arp_spoofing.py`
 - `adsb_encoder.py`
 - `config.sh`
 - `aim_high_dataset.csv`
@@ -24,27 +24,34 @@ make
 ```
 
 ## 1. Configure `config.sh`
-Edit `config.sh` to set the correct IP addresses and network interface. Example:
+Edit `config.sh` to set the correct IP addresses and network interface.
 
-## 2. Run `attack_4_arp_sproffing.sh`
+## 2. Run `tampering_arp_spoofing.sh`
 Make the script executable and run it:
 ```bash
-sudo sh attack_4_arp_sproffing.sh 
+sudo sh tampering_arp_spoofing.sh 
 ```
 
 ## 3. Run `adsb_encoder.py`
 This script may require additional Python packages. Run:
 ```bash
-python adsb_encoder.py --send --csv aim_high_dataset.csv --rate 2000
+python adsb_encoder.py --send --csv dataset/aim_high_dataset.csv --rate 1000
 ```
 
-## 4. Run `attack_4_arp_sproffing.py` (TBD)
+## 4. Run `tampering_arp_spoofing.py` (TBD)
 Make sure Python 3 is installed. Run the script:
 ```bash
-python3 attack_4_arp_sproffing.py
+python3 tampering_arp_spoofing.py
 ```
 
 ## Notes
 - Always run these scripts with appropriate permissions (use `sudo` if required).
 - Ensure you are on the correct network interface as set in `config.sh`.
 - For troubleshooting, check script outputs and logs.
+
+### Prepare dataset
+Make sure Python 3 is installed. Run the script:
+```bash
+cd dataset
+python3 pixel_to_gps.py arm_high.png
+```

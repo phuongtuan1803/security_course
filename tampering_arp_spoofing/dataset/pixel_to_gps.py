@@ -3,21 +3,25 @@ import numpy as np
 import pandas as pd
 from PIL import Image, ImageOps
 import math
+import sys
 
-# 1. Đọc ảnh + chuyển đen-trắng nhị phân
-image_path = "arm_high.png"             # đổi tên file nếu cần
+# 1. Read image + convert to black-and-white binary
+if len(sys.argv) < 2:
+    print("Usage: python3 pixel_to_gps.py <image_path>")
+    sys.exit(1)
+image_path = sys.argv[1]
 img = Image.open(image_path).convert("RGB")
 gray = ImageOps.grayscale(img)
 
-threshold = 50                        # ngưỡng tách nền
+threshold = 50                        # background separation threshold
 binary = gray.point(lambda x: 255 if x > threshold else 0, mode="1")
-binary = binary.resize((100, 100))    # 100×100 pixel
+binary = binary.resize((100, 100))    # 100×100 pixels
 
-# 2. Chuyển sang NumPy bool (True = điểm trắng)
+# 2. Convert to NumPy bool (True = white pixel)
 arr = np.array(binary, dtype=bool)    # shape (h, w)
 h, w = arr.shape
 
-# 3. Hàm chuyển pixel → toạ độ GPS
+# 3. Function to convert pixel → GPS coordinates
 lat0, lon0 = 40.4406, -79.9959
 def pixel_to_gps(px, py, *, meters_per_pixel=1000):
     dx = (px - w / 2) * meters_per_pixel          # +east
@@ -26,8 +30,8 @@ def pixel_to_gps(px, py, *, meters_per_pixel=1000):
     lon = lon0 + dx / (111_320 * math.cos(math.radians(lat0)))
     return lat, lon
 
-# 4. Vector hoá: lấy mọi pixel True
-ys, xs = np.where(arr)            # toạ độ (hàng, cột) pixel trắng
+# 4. Vectorize: get all True pixels
+ys, xs = np.where(arr)            # coordinates (row, column) of white pixels
 lats, lons = zip(*(pixel_to_gps(x, y) for x, y in zip(xs, ys)))
 
 df = pd.DataFrame({
@@ -44,6 +48,6 @@ df = pd.DataFrame({
     # "pixel_y": ys
 })
 
-csv_path = "aim_high_coords.csv"
+csv_path = "aim_high_dataset.csv"
 df.to_csv(csv_path, index=False)
 print(f"Saved {len(df)} points → {csv_path}")

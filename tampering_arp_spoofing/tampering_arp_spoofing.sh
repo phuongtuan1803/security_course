@@ -4,7 +4,7 @@ set -eu
 ###############################################################################
 # 1. User-tunable variables
 ###############################################################################
-. $(dirname "$0")/config.sh
+. $(pwd)/config.sh
 PORT=9999                               # TCP port to filter with NFQUEUE
 QUEUE_NUM=1                             # NFQUEUE number
 PORT_DUMP=30002                         # Port to redirect traffic to
