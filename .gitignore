@@ -2,3 +2,5 @@
 fishing_dns_sproffing/ADSB-hub_dump/.vs/
 fishing_dns_sproffing/ADSB-hub_dump/x64/Debug/
 fishing_dns_sproffing/ADSB-hub_dump/ADSB-hub_dump/x64/
+vm_setup/id_ed25519
+vm_setup/id_ed25519.pub
