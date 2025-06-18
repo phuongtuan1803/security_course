@@ -1,0 +1,67 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DE6F2C71-AD3A-4C79-AB02-B3E4A91D45DC}|ADSB-hub_dump\\ADSB-hub_dump.vcxproj|E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\ADSB-hub_dump.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE6F2C71-AD3A-4C79-AB02-B3E4A91D45DC}|ADSB-hub_dump\\ADSB-hub_dump.vcxproj|solutionrelative:ADSB-hub_dump\\ADSB-hub_dump.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE6F2C71-AD3A-4C79-AB02-B3E4A91D45DC}|ADSB-hub_dump\\ADSB-hub_dump.vcxproj|E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\aim_high.bmp||{58961B49-13E0-48C0-9258-13CBC4D40279}",
+      "RelativeMoniker": "D:0:0:{DE6F2C71-AD3A-4C79-AB02-B3E4A91D45DC}|ADSB-hub_dump\\ADSB-hub_dump.vcxproj|solutionrelative:ADSB-hub_dump\\aim_high.bmp||{58961B49-13E0-48C0-9258-13CBC4D40279}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE6F2C71-AD3A-4C79-AB02-B3E4A91D45DC}|ADSB-hub_dump\\ADSB-hub_dump.vcxproj|E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\ADSB-hub_dump.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       $ \u008D )$  \u0022     ",
+      "RelativeMoniker": "D:0:0:{DE6F2C71-AD3A-4C79-AB02-B3E4A91D45DC}|ADSB-hub_dump\\ADSB-hub_dump.vcxproj|solutionrelative:ADSB-hub_dump\\ADSB-hub_dump.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       $ \u008D )$  \u0022     "
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "aim_high.bmp",
+              "DocumentMoniker": "E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\aim_high.bmp",
+              "RelativeDocumentMoniker": "ADSB-hub_dump\\aim_high.bmp",
+              "ToolTip": "E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\aim_high.bmp",
+              "RelativeToolTip": "ADSB-hub_dump\\aim_high.bmp",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001533|",
+              "WhenOpened": "2025-06-18T00:12:46.898Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ADSB-hub_dump.cpp",
+              "DocumentMoniker": "E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\ADSB-hub_dump.cpp",
+              "RelativeDocumentMoniker": "ADSB-hub_dump\\ADSB-hub_dump.cpp",
+              "ToolTip": "E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\ADSB-hub_dump.cpp",
+              "RelativeToolTip": "ADSB-hub_dump\\ADSB-hub_dump.cpp",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-06-18T00:11:32.973Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ADSB-hub_dump.rc - IDC_ADSBHUBDUMP - Menu",
+              "DocumentMoniker": "E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\ADSB-hub_dump.rc",
+              "RelativeDocumentMoniker": "ADSB-hub_dump\\ADSB-hub_dump.rc",
+              "ToolTip": "E:\\_misc\\security_course\\sdet1\\compare\\security_course\\ADSB-hub_dump\\ADSB-hub_dump\\ADSB-hub_dump.rc - IDC_ADSBHUBDUMP - Menu",
+              "RelativeToolTip": "ADSB-hub_dump\\ADSB-hub_dump.rc - IDC_ADSBHUBDUMP - Menu",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-06-18T00:01:11.141Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
