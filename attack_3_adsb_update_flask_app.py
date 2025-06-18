@@ -122,7 +122,7 @@ def index():
 @app.route("/download")
 def download():
     """Send the latest .exe file from the static directory."""
-    filename = "static/ADS-B-Display-latest.exe"
+    filename = "ADS-B-Display-latest.exe"
     static_dir = os.path.join(app.root_path, "static")
     return send_from_directory(static_dir, filename, as_attachment=True)
 
