@@ -57,7 +57,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     HWND hWnd = CreateWindowW(
         szWindowClass, szTitle,
         WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, 710, 435,
+        CW_USEDEFAULT, 0, 1510, 835,
         nullptr, nullptr, hInstance, nullptr);
 
     if (!hWnd)
@@ -93,12 +93,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // Vùng vẽ ảnh đầu tiên
             SelectObject(hdcMem, hBmp1);
             GetObject(hBmp1, sizeof(BITMAP), &bmp);
-            StretchBlt(hdc, -40, 0, 400, 400, hdcMem, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
+            StretchBlt(hdc, -40, 0, 800, 800, hdcMem, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
 
             // Vùng vẽ ảnh thứ hai
             SelectObject(hdcMem, hBmp2);
             GetObject(hBmp2, sizeof(BITMAP), &bmp);
-            StretchBlt(hdc, 310, 0, 400, 400, hdcMem, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
+            StretchBlt(hdc, 710, 0, 800, 800, hdcMem, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
 
             DeleteDC(hdcMem);
         }
