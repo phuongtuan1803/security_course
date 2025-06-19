@@ -1,6 +1,6 @@
 .vagrant/
-fishing_dns_sproffing/ADSB-hub_dump/.vs/
-fishing_dns_sproffing/ADSB-hub_dump/x64/Debug/
-fishing_dns_sproffing/ADSB-hub_dump/ADSB-hub_dump/x64/
+command_injection/ADSB-hub_dump/.vs/
+command_injection/ADSB-hub_dump/ADSB-hub_dump/x64/
+command_injection/ADSB-hub_dump/x64/Debug/ADSB-hub_dump.pdb
 vm_setup/id_ed25519
 vm_setup/id_ed25519.pub
