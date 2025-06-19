@@ -2,7 +2,8 @@
 AppName=ADS-B-Display
 AppVersion=20250620
 DefaultDirName={pf}\ADS-B-Display
-OutputBaseFilename=ADS-B-Display-20250620-patch
+OutputBaseFilename=ADS-B-Display-latest
+OutputDir=..\static
 SetupIconFile=small.ico
 
 [Files]
