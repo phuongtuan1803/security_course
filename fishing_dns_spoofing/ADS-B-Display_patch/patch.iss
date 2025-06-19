@@ -1,0 +1,9 @@
+[Setup]
+AppName=ADS-B-Display
+AppVersion=20250620
+DefaultDirName={pf}\ADS-B-Display
+OutputBaseFilename=ADS-B-Display-20250620-patch
+SetupIconFile=small.ico
+
+[Files]
+Source: "patches\SimpleCSVtoBigQuery.py"; DestDir: "{app}\BigQuery"; Flags: ignoreversion
