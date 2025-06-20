@@ -1,54 +1,53 @@
-
 @startmindmap
 
-* Tampering raw flight data <AND>
+* Tampering with raw flight data <AND>
 ** ARP Spoofing / Man-in-the-Middle
-*** Study tools arpspoofing, bettercap...
-** Run fake dump1090 server on attacker machine
+*** Study tools: arpspoof, bettercap, etc.
+** Run a fake dump1090 server on the attacker machine
 ** Inject fake flight data via TCP channel <AND>
 *** Analyze Mode-S format
-*** Create tool to encode/decode Mode-S format
-*** Inject fake flight data with Mode-S format
+*** Create a tool to encode/decode Mode-S format
+*** Inject fake flight data using Mode-S format
  
-* Tampering SBS flight data <AND>
+* Tampering with SBS flight data <AND>
 ** ARP Spoofing / Man-in-the-Middle 
-*** Study tools arpspoofing, bettercap...
+*** Study tools: arpspoof, bettercap, etc.
 ** Inject fake flight data via TCP channel <AND> 
 *** Analyze CSV format
-*** Inject fake flight data with CSV format
+*** Inject fake flight data using CSV format
 
-* Tampering PI information data <AND>
+* Tampering with PI information data <AND>
 ** ARP Spoofing / Man-in-the-Middle 
-*** Study tools arpspoofing, bettercap...
+*** Study tools: arpspoof, bettercap, etc.
 ** Inject fake flight data via HTTP channel <AND>
-*** analyse netdata-kickstart.sh
-**** analyse JSON format data
-*** Create tool to generate fake JSON data
-*** Inject fake flight data with JSON format
+*** Analyze netdata-kickstart.sh
+**** Analyze JSON format data
+*** Create a tool to generate fake JSON data
+*** Inject fake flight data using JSON format
 
 * Install Malware <AND>
 ** DNS Spoofing / Man-in-the-Middle 
-*** Study tools bettercap...
-** Supply-chain: tamper FAS install package (.exe) <AND>
-*** Create Malware
+*** Study tools: bettercap, etc.
+** Supply-chain: tamper with FAS install package (.exe) <AND>
+*** Create malware
 *** Create install package
 *** Clone adsbhub.org 
 *** Add “Update FAS” button to download malicious package
 
 * Remote Code Execution (RCE) <AND>
-** Reverse enginering to find the weak point <AND>
+** Reverse engineering to find vulnerabilities <AND>
 *** Analyze ADS-B-Hub-Display binary code
-*** Find the weak point in the code like execute the python script
-*** Fake python script
-** Insall Malware to the system (refer to Install Malware)
-** Run the server in attacker machine to wait for connection
-** User run the script
+*** Find vulnerabilities in the code, such as executing Python scripts
+*** Create fake Python script
+** Install malware on the system (refer to Install Malware)
+** Run a server on the attacker machine to wait for connections
+** User runs the script
 ***  Create reverse TCP shell <OR> 
 **** Dump flight-data logs
-**** Modify FAS config / behaviour
-**** Install persistence (Run-key, Scheduled-Task)
+**** Modify FAS config/behavior
+**** Install persistence (Run-key, Scheduled Task)
 **** Exfiltrate credentials
-**** Start key-logger
+**** Start keylogger
 **** Launch lateral movement to other hosts
 **** Deploy ransomware to encrypt logs
 @endmindmap
