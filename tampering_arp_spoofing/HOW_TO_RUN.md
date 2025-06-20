@@ -53,5 +53,5 @@ python3 tampering_arp_spoofing.py
 Make sure Python 3 is installed. Run the script:
 ```bash
 cd dataset
-python3 pixel_to_gps.py arm_high.png
+python3 pixel_to_gps.py aim_high.png
 ```
