@@ -1,0 +1,11 @@
+@startmindmap
+
+* Spoofing the PI with PI information data <AND>
+** 1. ARP Spoofing / Man-in-the-Middle
+*** 1.1. Survey and select tools: arpspoof, bettercap, etc.
+** 2. Inject fake flight data via HTTP channel <AND>
+*** 2.1. Analyze netdata-kickstart.sh
+**** 2.1.1. Analyze JSON format data
+*** 2.2. Create a tool to generate fake JSON data
+*** 2.3. Inject fake flight data using JSON format
+@endmindmap

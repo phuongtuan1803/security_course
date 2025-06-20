@@ -1,0 +1,12 @@
+@startmindmap
+
+* Spoofing the PI with raw flight data <AND>
+** 1. ARP Spoofing / Man-in-the-Middle
+*** 1.1. Survey and select tools: arpspoof, bettercap, etc.
+
+** 2. Run a fake dump1090 server on the attacker machine
+** 3. Inject fake flight data via TCP channel <AND>
+*** 3.1. Analyze Mode-S format
+*** 3.2. Create a tool to encode/decode Mode-S format
+*** 3.3. Inject fake flight data using Mode-S format
+@endmindmap
