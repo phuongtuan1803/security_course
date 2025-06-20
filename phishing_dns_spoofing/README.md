@@ -19,7 +19,7 @@ This repository contains demonstration scripts and servers for various network a
 - Run all scripts with appropriate privileges (some require `sudo`)
 
 ## Project Structure
-- `fishing_dns_spoofing/`
+- `phishing_dns_spoofing/`
   - `dns_spoofing.py` — Flask web server for fake update page
   - `dns_spoofing.sh` — Bash script to perform ARP and DNS spoofing
   - `static/ADS-B-Display-latest.exe` — Fake update executable
@@ -33,7 +33,7 @@ This attack demonstrates phishing via DNS spoofing and a fake update page.
 
 ### 1. Start the Fake Update Web Server
 ```bash
-cd fishing_dns_spoofing
+cd phishing_dns_spoofing
 python dns_spoofing.py
 ```
 - The server runs on `http://0.0.0.0:5000`.

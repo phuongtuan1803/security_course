@@ -1,0 +1,54 @@
+
+@startmindmap
+
+* Tampering raw flight data <AND>
+** ARP Spoofing / Man-in-the-Middle
+*** Study tools arpspoofing, bettercap...
+** Run fake dump1090 server on attacker machine
+** Inject fake flight data via TCP channel <AND>
+*** Analyze Mode-S format
+*** Create tool to encode/decode Mode-S format
+*** Inject fake flight data with Mode-S format
+ 
+* Tampering SBS flight data <AND>
+** ARP Spoofing / Man-in-the-Middle 
+*** Study tools arpspoofing, bettercap...
+** Inject fake flight data via TCP channel <AND> 
+*** Analyze CSV format
+*** Inject fake flight data with CSV format
+
+* Tampering PI information data <AND>
+** ARP Spoofing / Man-in-the-Middle 
+*** Study tools arpspoofing, bettercap...
+** Inject fake flight data via HTTP channel <AND>
+*** analyse netdata-kickstart.sh
+**** analyse JSON format data
+*** Create tool to generate fake JSON data
+*** Inject fake flight data with JSON format
+
+* Install Malware <AND>
+** DNS Spoofing / Man-in-the-Middle 
+*** Study tools bettercap...
+** Supply-chain: tamper FAS install package (.exe) <AND>
+*** Create Malware
+*** Create install package
+*** Clone adsbhub.org 
+*** Add “Update FAS” button to download malicious package
+
+* Remote Code Execution (RCE) <AND>
+** Reverse enginering to find the weak point <AND>
+*** Analyze ADS-B-Hub-Display binary code
+*** Find the weak point in the code like execute the python script
+*** Fake python script
+** Insall Malware to the system (refer to Install Malware)
+** Run the server in attacker machine to wait for connection
+** User run the script
+***  Create reverse TCP shell <OR> 
+**** Dump flight-data logs
+**** Modify FAS config / behaviour
+**** Install persistence (Run-key, Scheduled-Task)
+**** Exfiltrate credentials
+**** Start key-logger
+**** Launch lateral movement to other hosts
+**** Deploy ransomware to encrypt logs
+@endmindmap
