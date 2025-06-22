@@ -1,0 +1,30 @@
+@startuml
+'!pragma layout smetana
+hide footbox
+skinparam borderColor Black
+skinparam shadowing false
+
+title Sequence – Spoofing PI to Inject Raw Flight Data
+
+actor Attacker
+participant "Network (LAN)" as Network
+participant "Victim PI\n(dump1090)" as PI
+participant "Victim Display\n(ADS-B Display)" as Display
+
+== Step 1: MITM Setup via ARP Spoofing ==
+' Attacker tricks the PI and Display to route packets through attacker
+Attacker -> Network : Launch ARP spoofing\n (Bettercap/arpspoof)
+Network -> PI : ARP reply:\n "Display is at Attacker IP"
+Network -> Display : ARP reply:\n "PI is at Attacker IP"
+
+== Step 2: Fake Data Injection ==
+' Attacker now sits between Display and PI, or replaces PI entirely
+Attacker -> Attacker : Generate fake packages\nMode-S packets (hex format)
+Attacker -> Display : Send fake flight data \nto TCP port 30002
+
+== Step 3: Display Behavior ==
+' Display believes data is from PI
+Display -> Display : Parse fake raw flight data
+Display -> User : Show spoofed flight data
+
+@enduml

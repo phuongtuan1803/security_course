@@ -1,0 +1,29 @@
+@startuml
+'!pragma layout smetana
+hide footbox
+skinparam borderColor Black
+skinparam shadowing false
+
+title Sequence – Remote Code Execution
+
+participant "Attacker PC\n(RCE listener)" as AttackerPC
+participant "Victim PC\n(ADS-B-Hub-Display)" as Victim
+
+== Step 1: Reverse Engineering ==
+AttackerPC -> Victim : Analyze binary offline \n(IDA Free)
+note right: Finds feature that executes Python script
+
+== Step 2: Craft Payload ==
+AttackerPC -> AttackerPC : Create malicious script \n(Reverse TCP shell)
+AttackerPC -> Victim : Deliver malware \n(refer to DNS/Malware PoC)
+
+== Step 3: Execution ==
+AttackerPC -> AttackerPC : Start listener
+Victim -> Victim : Executes malicious script (on UI trigger)
+Victim -> AttackerPC : Reverse TCP connection established
+
+== Step 4: Post-Exploitation ==
+AttackerPC -> Victim : Executes remote shell commands
+Victim -> AttackerPC : Sends data/logs or modifies behavior
+
+@enduml
