@@ -29,13 +29,14 @@ Edit `config.sh` to set the correct IP addresses and network interface.
 ## 2. Run `tampering_arp_spoofing.sh`
 Make the script executable and run it:
 ```bash
-sudo sh tampering_arp_spoofing.sh 
+chmod +x tampering_arp_spoofing.sh
+sudo ./tampering_arp_spoofing.sh
 ```
 
 ## 3. Run `adsb_encoder.py`
 This script may require additional Python packages. Run:
 ```bash
-python adsb_encoder.py --send --csv dataset/aim_high_dataset.csv --rate 1000
+python3 adsb_encoder.py --send --csv dataset/aim_high_dataset.csv --rate 1000
 ```
 
 ## 4. Run `tampering_arp_spoofing.py` (TBD)

@@ -19,5 +19,5 @@ sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets $DISPLAY_ADDRESS; 
 # tshark -Y 'dns.qry.name == "data.adsbhub.org"'
 
  
-# Check the vitim PC
+# Check the victim PC
 # arp -a

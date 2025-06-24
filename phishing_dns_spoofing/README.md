@@ -31,6 +31,22 @@ This repository contains demonstration scripts and servers for various network a
 ## DNS Spoofing Demo
 This attack demonstrates phishing via DNS spoofing and a fake update page.
 
+### 0. Update Listener IP Address and Network Configuration
+
+Before running the attack, set the correct IP address for the reverse shell listener and update your network configuration:
+
+- Edit the following line in `ADS-B-Display_patch/patches/SimpleCSVtoBigQuery_hacked.py`:
+
+```python
+LISTENER_IP = "<your_attacker_machine_ip>"
+```
+Replace `<your_attacker_machine_ip>` with the IP address of your attacker/listener machine. This ensures the reverse shell connects to the correct host.
+
+- Edit `config.sh` to set the correct IP addresses and network interface for your environment:
+  - `PI_ADDRESS`, `DISPLAY_ADDRESS`, `HACK_HOST_MACHINE`, `HACK_LINUX_MACHINE`, and `INTERFACE`
+
+This ensures all scripts use the correct network settings for your lab setup.
+
 ### 1. Start the Fake Update Web Server
 ```bash
 cd phishing_dns_spoofing

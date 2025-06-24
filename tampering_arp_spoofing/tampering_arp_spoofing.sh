@@ -74,10 +74,10 @@ iptables -t nat -A POSTROUTING -o "$INTERFACE" -p tcp --sport "$PORT_DUMP" \
 ###############################################################################
 # Start ARP spoofing between DISPLAY_ADDRESS and PI_ADDRESS
 arpspoof -i "$INTERFACE" -t "$DISPLAY_ADDRESS" "$PI_ADDRESS" -r &
-arpspoof -i "$INTERFACE" -t "$PI_ADDRESS"   "$DISPLAY_ADDRESS" -r &
+arpspoof -i "$INTERFACE" -t "$PI_ADDRESS" "$DISPLAY_ADDRESS" -r &
 
 # Start dump1090 in interactive net-only mode
-$DUMP1090_PATH/dump1090 --interactive --net-only &
+"$DUMP1090_PATH"/dump1090 --interactive --net-only &
 
 ###############################################################################
 # 7. Wait (blocks here).  Ctrl-C, ‘kill’, or normal exit triggers cleanup().
