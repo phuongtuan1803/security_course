@@ -1,0 +1,25 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing true
+skinparam ArrowColor Black
+skinparam ArrowThickness 2
+skinparam defaultFontName "Arial"
+ 
+left to right direction
+title 🛡️ Spoofing PI to Inject Raw Flight Data
+ 
+skinparam component {
+    BackgroundColor<<**attacker**>> #FFCDD2
+    BorderColor Gray
+    FontColor Black
+}
+ 
+component "🍓 Raspberry Pi\ndump1090 Server" as PI <<**pi**>>
+component "🕷️ Kali\nfake dump1090 server\n + ARP spoof" as MITM <<**attacker**>>
+component "🖥️ Display PC\nDashboard Client" as Display <<**dashboard**>>
+ 
+
+PI -[#gray,thickness=2]-> MITM : 📦 Mode-S packets
+MITM -[#red,thickness=3]-> Display : 🧨 Tampered Mode-S packets
+ 
+@enduml
